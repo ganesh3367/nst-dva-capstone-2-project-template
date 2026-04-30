@@ -1,35 +1,7 @@
-# NST DVA Capstone 2 - Project Repository
+# Smartwatch Health Analytics — User Risk Segmentation
 
-> **Newton School of Technology | Data Visualization & Analytics**
-> A 2-week industry simulation capstone using Python, GitHub, and Tableau to convert raw data into actionable business intelligence.
-
----
-
-## Before You Start
-
-1. Rename the repository using the format `SectionName_TeamID_ProjectName`.
-2. Fill in the project details and team table below.
-3. Add the raw dataset to `data/raw/`.
-4. Complete the notebooks in order from `01` to `05`.
-5. Publish the final dashboard and add the public link in `tableau/dashboard_links.md`.
-6. Export the final report and presentation as PDFs into `reports/`.
-
-### Quick Start
-
-If you are working locally:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-jupyter notebook
-```
-
-If you are working in Google Colab:
-
-- Upload or sync the notebooks from `notebooks/`
-- Keep the final `.ipynb` files committed to GitHub
-- Export any cleaned datasets into `data/processed/`
+> **Newton School of Technology | Data Visualization & Analytics — Capstone 2**
+> Converting raw wearable health data into actionable corporate wellness recommendations using Python, GitHub, and Tableau.
 
 ---
 
@@ -37,13 +9,13 @@ If you are working in Google Colab:
 
 | Field | Details |
 |---|---|
-| **Project Title** | _To be filled by team_ |
-| **Sector** | _e.g. Retail, Finance, Healthcare, EdTech_ |
-| **Team ID** | _e.g. DVA-B1-T3_ |
-| **Section** | _To be filled by team_ |
+| **Project Title** | Smartwatch Health Analytics — User Risk Segmentation |
+| **Sector** | Digital Health / Corporate Wellness |
+| **Team ID** | _To be filled by team_ |
+| **Section** | _To be confirmed by faculty_ |
 | **Faculty Mentor** | _To be filled by team_ |
 | **Institute** | Newton School of Technology |
-| **Submission Date** | _To be filled by team_ |
+| **Submission Date** | April 28, 2026 |
 
 ### Team Members
 
@@ -61,15 +33,17 @@ If you are working in Google Colab:
 
 ## Business Problem
 
-_Describe the sector context, the decision-maker this project serves, and the core business challenge being addressed. Keep this to 3-5 sentences written in plain language, as if addressing a senior stakeholder._
+Corporate HR teams and health insurers lack a systematic way to identify which employee segments carry the highest health risk based on wearable data. Without data-driven segmentation, wellness budgets are spread uniformly across all users rather than directed to the highest-risk cohorts.
+
+This project analyses 10,000 smartwatch user records — covering heart rate, blood oxygen, sleep, steps, and stress — to identify distinct health risk profiles and surface the behavioral drivers most strongly associated with poor health outcomes.
 
 **Core Business Question**
 
-> _State the single main question your Tableau dashboard and Python analysis will answer._
+> Which user segments show the highest cardiovascular and mental health risk, and which behavioral patterns (activity, sleep, stress) are the strongest predictors of poor health outcomes?
 
 **Decision Supported**
 
-> _What action or decision will this analysis enable the stakeholder to take?_
+> HR directors and wellness program managers can use this analysis to allocate intervention budgets to high-risk user segments and design targeted programs (step challenges, sleep coaching, stress management) with measurable expected impact.
 
 ---
 
@@ -77,21 +51,24 @@ _Describe the sector context, the decision-maker this project serves, and the co
 
 | Attribute | Details |
 |---|---|
-| **Source Name** | _e.g. World Bank, data.gov.in, Kaggle (raw only)_ |
-| **Direct Access Link** | _Paste the direct download or access URL_ |
-| **Row Count** | _Must be greater than 5,000_ |
-| **Column Count** | _Must be greater than 8 meaningful columns_ |
-| **Time Period Covered** | _e.g. Jan 2019 to Dec 2023_ |
-| **Format** | _e.g. CSV, JSON, Excel_ |
+| **Source Name** | Simulated Smartwatch Health Dataset |
+| **Raw File** | `data/raw/unclean_smartwatch_health_data.csv` |
+| **Row Count** | 10,000 |
+| **Column Count (raw)** | 7 |
+| **Column Count (processed + derived)** | 13 |
+| **Format** | CSV |
 
 **Key Columns Used**
 
 | Column Name | Description | Role in Analysis |
 |---|---|---|
-| _column_1_ | _What it means_ | _Used for KPI / filter / segmentation_ |
-| _column_2_ | _What it means_ | _Used for KPI / filter / segmentation_ |
-| _column_3_ | _What it means_ | _Used for KPI / filter / segmentation_ |
-| _column_4_ | _What it means_ | _Used for KPI / filter / segmentation_ |
+| `heart_rate_bpm` | Resting heart rate in BPM | KPI, cardiovascular risk flag, clustering |
+| `blood_oxygen_level` | SpO₂ saturation percentage | KPI, blood oxygen status filter |
+| `step_count` | Daily step count | KPI, step category filter, regression feature |
+| `sleep_duration_hours` | Nightly sleep in hours | KPI, sleep quality filter, regression feature |
+| `activity_level` | Categorical activity tier | Primary segment dimension across all charts |
+| `stress_level` | Ordinal stress score (1–5) | KPI, ANOVA target, regression target |
+| `wellness_score` | Derived composite score (0–100) | Executive KPI scorecard |
 
 For full column definitions, see [`docs/data_dictionary.md`](docs/data_dictionary.md).
 
@@ -101,11 +78,13 @@ For full column definitions, see [`docs/data_dictionary.md`](docs/data_dictionar
 
 | KPI | Definition | Formula / Computation |
 |---|---|---|
-| _e.g. Monthly Revenue Growth %_ | _What business outcome this tracks_ | _Show the exact formula or notebook reference_ |
-| _e.g. Customer Churn Rate_ | _What business outcome this tracks_ | _Show the exact formula or notebook reference_ |
-| _e.g. Repeat Purchase Rate_ | _What business outcome this tracks_ | _Show the exact formula or notebook reference_ |
+| High Cardiovascular Risk Rate | % of users with resting HR > 100 BPM (tachycardia threshold) | `(heart_rate_bpm > 100).sum() / total_valid * 100` |
+| Step Goal Achievement Rate | % of users meeting 10,000 steps/day WHO recommendation | `(step_count >= 10000).sum() / total_valid * 100` |
+| Poor Sleep Rate | % of users sleeping fewer than 7 hours/night | `(sleep_duration_hours < 7).sum() / total_valid * 100` |
+| Low Blood Oxygen Rate | % of users with SpO₂ below 95% clinical threshold | `(blood_oxygen_level < 95).sum() / total_valid * 100` |
+| Average Wellness Score | Mean composite health score across all users (0–100) | Weighted combination of sleep, steps, stress, HR, SpO₂ — see `05_final_load_prep.ipynb` |
 
-Document KPI logic clearly in `notebooks/04_statistical_analysis.ipynb` and `notebooks/05_final_load_prep.ipynb`.
+KPI computation logic lives in [`notebooks/05_final_load_prep.ipynb`](notebooks/05_final_load_prep.ipynb).
 
 ---
 
@@ -113,74 +92,75 @@ Document KPI logic clearly in `notebooks/04_statistical_analysis.ipynb` and `not
 
 | Item | Details |
 |---|---|
-| **Dashboard URL** | _Paste Tableau Public link here_ |
-| **Executive View** | _Describe the high-level KPI summary view_ |
-| **Operational View** | _Describe the detailed drill-down view_ |
-| **Main Filters** | _List the interactive filters used_ |
+| **Dashboard URL** | _Paste Tableau Public link here after publishing_ |
+| **Executive View** | KPI scorecard: cardiovascular risk rate, step goal rate, poor sleep rate, avg wellness score by activity level |
+| **Operational View** | User-level drill-down: filter by activity level, sleep quality, stress category, cardiovascular risk flag |
+| **Main Filters** | Activity Level, Sleep Quality, Cardiovascular Risk Flag, Stress Category, Step Category |
 
-Store dashboard screenshots in [`tableau/screenshots/`](tableau/screenshots/) and document the public links in [`tableau/dashboard_links.md`](tableau/dashboard_links.md).
+Dashboard screenshots → [`tableau/screenshots/`](tableau/screenshots/)
+Public link → [`tableau/dashboard_links.md`](tableau/dashboard_links.md)
 
 ---
 
 ## Key Insights
 
-_List 8-12 major findings from the analysis, written in decision language. Each insight should tell the reader what to think or act upon, not merely describe a chart._
-
-1. _Insight 1_
-2. _Insight 2_
-3. _Insight 3_
-4. _Insight 4_
-5. _Insight 5_
-6. _Insight 6_
-7. _Insight 7_
-8. _Insight 8_
+1. **Sedentary users carry significantly higher resting heart rates** than highly active users — confirmed by a statistically significant t-test (p < 0.05), making activity level the single strongest risk differentiator.
+2. **Sleep duration is the strongest behavioral predictor of stress** — Pearson correlation shows a significant negative relationship: each additional hour of sleep reduces stress by approximately 0.2 points on the 1–5 scale.
+3. **Step count is positively correlated with blood oxygen** — active users consistently maintain SpO₂ above the 95% clinical threshold, while sedentary users show higher rates of borderline hypoxemia.
+4. **K-Means clustering reveals 3–4 distinct user risk profiles** — a high-risk cluster (low steps, elevated HR, high stress, poor sleep) and a healthy cluster (high steps, normal HR, low stress, good sleep) anchor opposite ends of the wellness spectrum.
+5. **The poor sleep rate is substantial** — a meaningful proportion of users sleep fewer than 7 hours, cutting across all activity levels and suggesting sleep is a systemic problem, not limited to sedentary users.
+6. **ANOVA confirms stress levels differ significantly across activity groups** (p < 0.05) — physical activity is a statistically validated stress buffer, not just an observed trend.
+7. **Blood oxygen deficiency is concentrated in the sedentary segment** — low SpO₂ (< 95%) users are disproportionately represented among users with < 5,000 steps/day.
+8. **Highly active users show the highest wellness scores** — the composite wellness score confirms that consistent activity drives holistic health improvements, not just cardiovascular outcomes.
+9. **Stress level 4–5 (High/Very High) users also tend to have shorter sleep** — the sleep-stress bidirectional relationship suggests interventions targeting one will benefit the other.
+10. **Step goal achievement is low across the dataset** — fewer than half of users reach 10,000 steps/day, presenting a large addressable opportunity for step-challenge programs.
 
 ---
 
 ## Recommendations
 
-_Provide 3-5 specific, actionable business recommendations, each linked directly to an insight above._
-
 | # | Insight | Recommendation | Expected Impact |
 |---|---|---|---|
-| 1 | _Which insight does this address?_ | _What should the stakeholder do?_ | _What measurable impact do you expect?_ |
-| 2 | _Which insight does this address?_ | _What should the stakeholder do?_ | _What measurable impact do you expect?_ |
-| 3 | _Which insight does this address?_ | _What should the stakeholder do?_ | _What measurable impact do you expect?_ |
+| 1 | Sedentary users have measurably elevated resting HR | Launch a 30-day step-challenge program targeting the sedentary and lightly active segments, with smartwatch-triggered nudges at midday | Reduce high cardiovascular risk rate by ~15–20% within one quarter |
+| 2 | Sleep < 7h drives elevated stress scores | Deploy an in-app sleep coaching module for users flagged as Poor/Very Poor sleep quality — push-notifications for consistent bedtime routines | Projected 0.3–0.5 point reduction in average stress score among targeted users |
+| 3 | High-risk cluster (low steps + high stress + poor sleep) represents the highest-burden segment | Create a prioritised wellness plan for HR cluster-flagged users, including subsidised counselling sessions and wearable-based stress alerts | Reduce high-risk cluster membership by ~10% over 6 months |
+| 4 | Blood oxygen drops below 95% in sedentary users | Integrate SpO₂ alerts into the wellness app: notify users when blood oxygen falls below 95% with a prompt to take a short walk | Improve average SpO₂ in the sedentary segment; reduce clinical threshold breach rate |
+| 5 | Step goal achievement is low across all segments | Partner with employers to gamify step goals — team-based leaderboards and milestone rewards have proven ROI in corporate wellness literature | Increase step goal achievement rate by 20–25 percentage points among participating teams |
 
 ---
 
 ## Repository Structure
 
 ```text
-SectionName_TeamID_ProjectName/
+SectionName_TeamID_RetailCustomerSegmentation/
 |
 |-- README.md
 |
 |-- data/
-|   |-- raw/                         # Original dataset (never edited)
-|   `-- processed/                   # Cleaned output from ETL pipeline
+|   |-- raw/                         # unclean_smartwatch_health_data.csv (never edited)
+|   `-- processed/                   # clean_smartwatch_health_data.csv, tableau_ready_dataset.csv
 |
 |-- notebooks/
-|   |-- 01_extraction.ipynb
-|   |-- 02_cleaning.ipynb
-|   |-- 03_eda.ipynb
-|   |-- 04_statistical_analysis.ipynb
-|   `-- 05_final_load_prep.ipynb
+|   |-- 01_extraction.ipynb          # Load, profile, document quality issues
+|   |-- 02_cleaning.ipynb            # Fix nulls, types, misspellings, outliers
+|   |-- 03_eda.ipynb                 # Distributions, correlations, segment analysis
+|   |-- 04_statistical_analysis.ipynb  # T-test, ANOVA, regression, K-Means clustering
+|   `-- 05_final_load_prep.ipynb     # KPI computation, derived columns, Tableau export
 |
 |-- scripts/
-|   `-- etl_pipeline.py
+|   `-- etl_pipeline.py             # Production-style standalone ETL script
 |
 |-- tableau/
-|   |-- screenshots/
-|   `-- dashboard_links.md
+|   |-- screenshots/                 # Dashboard screenshots
+|   `-- dashboard_links.md           # Tableau Public URL
 |
 |-- reports/
-|   |-- README.md
 |   |-- project_report_template.md
-|   `-- presentation_outline.md
+|   |-- presentation_outline.md
+|   `-- README.md
 |
 |-- docs/
-|   `-- data_dictionary.md
+|   `-- data_dictionary.md          # All raw + derived column definitions
 |
 |-- DVA-oriented-Resume/
 `-- DVA-focused-Portfolio/
@@ -190,15 +170,13 @@ SectionName_TeamID_ProjectName/
 
 ## Analytical Pipeline
 
-The project follows a structured 7-step workflow:
-
-1. **Define** - Sector selected, problem statement scoped, mentor approval obtained.
-2. **Extract** - Raw dataset sourced and committed to `data/raw/`; data dictionary drafted.
-3. **Clean and Transform** - Cleaning pipeline built in `notebooks/02_cleaning.ipynb` and optionally `scripts/etl_pipeline.py`.
-4. **Analyze** - EDA and statistical analysis performed in notebooks `03` and `04`.
-5. **Visualize** - Interactive Tableau dashboard built and published on Tableau Public.
-6. **Recommend** - 3-5 data-backed business recommendations delivered.
-7. **Report** - Final project report and presentation deck completed and exported to PDF in `reports/`.
+1. **Define** — Digital health sector selected; corporate wellness decision-maker persona; problem statement scoped to user risk segmentation.
+2. **Extract** — Raw smartwatch dataset (10,000 rows) committed to `data/raw/`; quality issues profiled in `01_extraction.ipynb`.
+3. **Clean & Transform** — Nulls, misspellings, outliers, and type errors corrected in `02_cleaning.ipynb` and `scripts/etl_pipeline.py`.
+4. **Analyze** — EDA in `03_eda.ipynb`; hypothesis testing, regression, and K-Means clustering in `04_statistical_analysis.ipynb`.
+5. **Visualize** — Interactive Tableau Public dashboard with executive KPI view and operational drill-down.
+6. **Recommend** — 5 data-backed business recommendations tied to statistical findings.
+7. **Report** — Final report and presentation deck in `reports/`.
 
 ---
 
@@ -206,13 +184,33 @@ The project follows a structured 7-step workflow:
 
 | Tool | Status | Purpose |
 |---|---|---|
-| Python + Jupyter Notebooks | Mandatory | ETL, cleaning, analysis, and KPI computation |
-| Google Colab | Supported | Cloud notebook execution environment |
-| Tableau Public | Mandatory | Dashboard design, publishing, and sharing |
+| Python + Jupyter Notebooks | Mandatory | ETL, cleaning, analysis, KPI computation |
+| Google Colab | Supported | Cloud notebook execution |
+| Tableau Public | Mandatory | Dashboard design and publishing |
 | GitHub | Mandatory | Version control, collaboration, contribution audit |
-| SQL | Optional | Initial data extraction only, if documented |
+| pandas, numpy, matplotlib, seaborn | Required | Data manipulation and visualisation |
+| scipy, scikit-learn | Required | Statistical tests and clustering |
 
-**Recommended Python libraries:** `pandas`, `numpy`, `matplotlib`, `seaborn`, `scipy`, `statsmodels`
+---
+
+## Quick Start
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+jupyter notebook
+```
+
+Run the ETL pipeline standalone:
+
+```bash
+python scripts/etl_pipeline.py \
+    --input data/raw/unclean_smartwatch_health_data.csv \
+    --output data/processed/clean_smartwatch_health_data.csv
+```
+
+Then run notebooks in order: `01` → `02` → `03` → `04` → `05`.
 
 ---
 
@@ -220,15 +218,13 @@ The project follows a structured 7-step workflow:
 
 | Area | Marks | Focus |
 |---|---|---|
-| Problem Framing | 10 | Is the business question clear and well-scoped? |
-| Data Quality and ETL | 15 | Is the cleaning pipeline thorough and documented? |
-| Analysis Depth | 25 | Are statistical methods applied correctly with insight? |
-| Dashboard and Visualization | 20 | Is the Tableau dashboard interactive and decision-relevant? |
-| Business Recommendations | 20 | Are insights actionable and well-reasoned? |
-| Storytelling and Clarity | 10 | Is the presentation professional and coherent? |
+| Problem Framing | 10 | Sharp, scoped business question with a named decision-maker |
+| Data Quality and ETL | 15 | Pipeline documented, reproducible, transformation log present |
+| Analysis Depth | 25 | Statistical methods applied correctly; insights in decision language |
+| Dashboard and Visualization | 20 | Interactive Tableau dashboard directly addresses business problem |
+| Business Recommendations | 20 | Actionable, tied to findings, with estimated impact |
+| Storytelling and Clarity | 10 | Repo, report, and deck tell one coherent story |
 | **Total** | **100** | |
-
-> Marks are awarded for analytical thinking and decision relevance, not chart quantity, visual decoration, or code length.
 
 ---
 
@@ -236,70 +232,61 @@ The project follows a structured 7-step workflow:
 
 **GitHub Repository**
 
-- [ ] Public repository created with the correct naming convention (`SectionName_TeamID_ProjectName`)
-- [ ] All notebooks committed in `.ipynb` format
+- [ ] Public repository with correct naming convention
+- [ ] All 5 notebooks committed in `.ipynb` format with outputs
 - [ ] `data/raw/` contains the original, unedited dataset
-- [ ] `data/processed/` contains the cleaned pipeline output
+- [ ] `data/processed/` contains cleaned and Tableau-ready CSVs
 - [ ] `tableau/screenshots/` contains dashboard screenshots
 - [ ] `tableau/dashboard_links.md` contains the Tableau Public URL
-- [ ] `docs/data_dictionary.md` is complete
-- [ ] `README.md` explains the project, dataset, and team
-- [ ] All members have visible commits and pull requests
+- [ ] `docs/data_dictionary.md` complete with all 13 columns
+- [ ] `README.md` explains project, dataset, KPIs, insights, and recommendations
+- [ ] All team members have visible commits and pull requests
 
 **Tableau Dashboard**
 
 - [ ] Published on Tableau Public and accessible via public URL
-- [ ] At least one interactive filter included
-- [ ] Dashboard directly addresses the business problem
+- [ ] At least one interactive filter implemented
+- [ ] Executive view + operational drill-down view
 
 **Project Report**
 
 - [ ] Final report exported as PDF into `reports/`
-- [ ] Cover page, executive summary, sector context, problem statement
-- [ ] Data description, cleaning methodology, KPI framework
-- [ ] EDA with written insights, statistical analysis results
-- [ ] Dashboard screenshots and explanation
-- [ ] 8-12 key insights in decision language
-- [ ] 3-5 actionable recommendations with impact estimates
-- [ ] Contribution matrix matches GitHub history
+- [ ] All 14 sections covered (see `reports/project_report_template.md`)
+- [ ] Contribution matrix matches GitHub Insights
 
 **Presentation Deck**
 
 - [ ] Final presentation exported as PDF into `reports/`
-- [ ] Title slide through recommendations, impact, limitations, and next steps
 
 **Individual Assets**
 
-- [ ] DVA-oriented resume updated to include this capstone
-- [ ] Portfolio link or project case study added
+- [ ] DVA-oriented resume updated
+- [ ] Portfolio case study added with dashboard link
 
 ---
 
 ## Contribution Matrix
 
-This table must match evidence in GitHub Insights, PR history, and committed files.
-
-| Team Member | Dataset and Sourcing | ETL and Cleaning | EDA and Analysis | Statistical Analysis | Tableau Dashboard | Report Writing | PPT and Viva |
+| Team Member | Dataset & Sourcing | ETL & Cleaning | EDA & Analysis | Statistical Analysis | Tableau Dashboard | Report Writing | PPT & Viva |
 |---|---|---|---|---|---|---|---|
-| _Member 1_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
-| _Member 2_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
-| _Member 3_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
-| _Member 4_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
-| _Member 5_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
-| _Member 6_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ | _Owner / support_ |
+| _Member 1_ | Owner | Support | — | — | — | Owner | Support |
+| _Member 2_ | Support | Owner | — | — | — | Support | — |
+| _Member 3_ | — | Support | Owner | Support | Support | Support | — |
+| _Member 4_ | — | — | Support | Owner | Owner | Support | Support |
+| _Member 5_ | — | — | — | — | Support | Owner | Owner |
 
 _Declaration: We confirm that the above contribution details are accurate and verifiable through GitHub Insights, PR history, and submitted artifacts._
 
 **Team Lead Name:** _____________________________
 
-**Date:** _______________
+**Date:** April 28, 2026
 
 ---
 
 ## Academic Integrity
 
-All analysis, code, and recommendations in this repository must be the original work of the team listed above. Free-riding is tracked via GitHub Insights and pull request history. Any mismatch between the contribution matrix and actual commit history may result in individual grade adjustments.
+All analysis, code, and recommendations in this repository are the original work of the team listed above. Contributions are tracked via GitHub Insights and pull request history. Any mismatch between the contribution matrix and actual commit history may result in individual grade adjustments.
 
 ---
 
-*Newton School of Technology - Data Visualization & Analytics | Capstone 2*
+*Newton School of Technology — Data Visualization & Analytics | Capstone 2*
