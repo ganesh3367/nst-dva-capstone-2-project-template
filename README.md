@@ -11,9 +11,9 @@
 |---|---|
 | **Project Title** | Smartwatch Health Analytics — User Risk Segmentation |
 | **Sector** | Digital Health / Corporate Wellness |
-| **Team ID** | _To be filled by team_ |
+| **Team ID** | TBD |
 | **Section** | _To be confirmed by faculty_ |
-| **Faculty Mentor** | _To be filled by team_ |
+| **Faculty Mentor** | TBD |
 | **Institute** | Newton School of Technology |
 | **Submission Date** | April 28, 2026 |
 
@@ -264,15 +264,12 @@ Then run notebooks in order: `01` → `02` → `03` → `04` → `05`.
 
 | Team Member | Dataset & Sourcing | ETL & Cleaning | EDA & Analysis | Statistical Analysis | Tableau Dashboard | Report Writing | PPT & Viva |
 |---|---|---|---|---|---|---|---|
-| _Member 1_ | Owner | Support | — | — | — | Owner | Support |
-| _Member 2_ | Support | Owner | — | — | — | Support | — |
-| _Member 3_ | — | Support | Owner | Support | Support | Support | — |
-| _Member 4_ | — | — | Support | Owner | Owner | Support | Support |
-| _Member 5_ | — | — | — | — | Support | Owner | Owner |
+| Arkapravoj Raj Konwar | Support | Support | Support | Support | Owner | Owner | Owner |
+| Ganesh Wayal | Owner | Owner | Owner | Owner | Support | Support | Support |
 
 _Declaration: We confirm that the above contribution details are accurate and verifiable through GitHub Insights, PR history, and submitted artifacts._
 
-**Team Lead Name:** _____________________________
+**Team Lead Name:** Arkapravoj Raj Konwar
 
 **Date:** April 28, 2026
 
